@@ -1,0 +1,26 @@
+---
+- name: Configure Northwind Logistics local environment
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  tasks:
+    - name: Ensure logs directory exists
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/../logs"
+        state: directory
+        mode: "0755"
+
+    - name: Ensure screenshots directory exists
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/../screenshots"
+        state: directory
+        mode: "0755"
+
+    - name: Install Python dependencies
+      ansible.builtin.pip:
+        requirements: "{{ playbook_dir }}/../requirements.txt"
+
+    - name: Confirm Ansible playbook completed
+      ansible.builtin.debug:
+        msg: "Local environment folders and Python dependencies configured successfully"
