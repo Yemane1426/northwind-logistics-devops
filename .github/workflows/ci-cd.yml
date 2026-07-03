@@ -30,7 +30,7 @@ jobs:
 
       - name: Run automated tests
         run: |
-          pytest --cov=app --cov-report=term-missing
+          PYTHONPATH=. pytest --cov=app --cov-report=term-missing
 
   docker:
     name: Build Docker Image
