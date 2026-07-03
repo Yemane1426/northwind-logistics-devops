@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: northwind-logistics
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: northwind-logistics
+  template:
+    metadata:
+      labels:
+        app: northwind-logistics
+    spec:
+      containers:
+        - name: northwind-logistics
+          image: northwind-logistics:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
