@@ -1,33 +1,54 @@
-# Python
+# Python bytecode
 __pycache__/
 *.py[cod]
+*$py.class
+
+# Python environments
 .venv/
 venv/
+env/
+.venv-linux/
+
+# Testing and coverage
 .pytest_cache/
-*.egg-info/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
 
-# Secrets / local environment
-.env
-*.env
-!.env.example
+# Linters and type-checking
+.flake8-cache/
+.mypy_cache/
+.ruff_cache/
 
-# Terraform
-.terraform/
-*.tfstate
-*.tfstate.*
-crash.log
-*.tfvars
-!*.tfvars.example
+# Logs
+*.log
+logs/*.log
 
-# Ansible
-*.retry
-vault_pass.txt
-
-# Kubernetes / local cluster
-kubeconfig
-
-# Editor / OS
-.vscode/
-.idea/
+# Operating-system files
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# IDE configuration
+.vscode/
+.idea/
+
+# Generated Kubernetes files
+k8s/generated/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# Python build and package files
+build/
+dist/
+*.egg-info/
+
+# Local environment files
+.env
+.env.*
+!.env.example
