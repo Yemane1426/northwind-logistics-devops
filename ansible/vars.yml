@@ -1,0 +1,8 @@
+---
+project_root: "{{ playbook_dir }}/.."
+virtualenv_path: "{{ project_root }}/.venv-linux"
+requirements_file: "{{ project_root }}/requirements.txt"
+
+required_directories:
+  - "{{ project_root }}/logs"
+  - "{{ project_root }}/screenshots"
