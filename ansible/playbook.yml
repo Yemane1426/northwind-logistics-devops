@@ -1,26 +1,80 @@
 ---
-- name: Configure Northwind Logistics local environment
-  hosts: localhost
+- name: Configure persistent Northwind development environment
+  hosts: local
   connection: local
   gather_facts: true
 
+  vars_files:
+    - vars.yml
+
   tasks:
-    - name: Ensure logs directory exists
+    - name: Install required operating-system packages
+      become: true
+      ansible.builtin.apt:
+        name:
+          - python3
+          - python3-pip
+          - python3-venv
+          - curl
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Create required project directories
       ansible.builtin.file:
-        path: "{{ playbook_dir }}/../logs"
+        path: "{{ item }}"
         state: directory
         mode: "0755"
+      loop: "{{ required_directories }}"
 
-    - name: Ensure screenshots directory exists
-      ansible.builtin.file:
-        path: "{{ playbook_dir }}/../screenshots"
-        state: directory
-        mode: "0755"
+    - name: Create persistent Python virtual environment
+      ansible.builtin.command:
+        argv:
+          - python3
+          - -m
+          - venv
+          - "{{ virtualenv_path }}"
+        creates: "{{ virtualenv_path }}/bin/python"
 
-    - name: Install Python dependencies
+    - name: Install application requirements
       ansible.builtin.pip:
-        requirements: "{{ playbook_dir }}/../requirements.txt"
+        requirements: "{{ requirements_file }}"
+        virtualenv: "{{ virtualenv_path }}"
+        virtualenv_command: "python3 -m venv"
 
-    - name: Confirm Ansible playbook completed
+    - name: Install development and testing tools
+      ansible.builtin.pip:
+        name:
+          - pytest
+          - pytest-cov
+          - flake8
+        virtualenv: "{{ virtualenv_path }}"
+        virtualenv_command: "python3 -m venv"
+        state: present
+
+    - name: Verify application package import
+      ansible.builtin.command:
+        argv:
+          - "{{ virtualenv_path }}/bin/python"
+          - -c
+          - "from app import data; assert len(data.all_deliveries()) > 0"
+        chdir: "{{ project_root }}"
+      changed_when: false
+
+    - name: Run automated tests
+      ansible.builtin.command:
+        argv:
+          - "{{ virtualenv_path }}/bin/python"
+          - -m
+          - pytest
+          - --cov=app
+          - --cov-report=term-missing
+          - --cov-fail-under=80
+        chdir: "{{ project_root }}"
+      changed_when: false
+
+    - name: Confirm environment configuration
       ansible.builtin.debug:
-        msg: "Local environment folders and Python dependencies configured successfully"
+        msg:
+          - "Persistent virtual environment: {{ virtualenv_path }}"
+          - "Environment setup and verification completed successfully."
