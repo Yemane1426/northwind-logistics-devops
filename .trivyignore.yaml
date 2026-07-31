@@ -1,0 +1,14 @@
+vulnerabilities:
+  - id: GHSA-6v7p-g79w-8964
+    statement: >
+      Reported only through the Python base image's third-party embedded SBOM.
+      The application runtime does not install msgpack, and the live installed
+      package inventory does not contain the reported msgpack 1.1.2 package.
+    expired_at: 2026-12-31
+
+  - id: CVE-2025-47273
+    statement: >
+      Reported only through the Python base image's stale third-party embedded
+      SBOM as setuptools 70.3.0. The final image installs setuptools 83.0.0,
+      which is newer than the fixed version 78.1.1.
+    expired_at: 2026-12-31
