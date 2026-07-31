@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.14-slim
 
 LABEL org.opencontainers.image.title="Northwind Logistics"
 LABEL org.opencontainers.image.description="Northwind delivery tracking service"
