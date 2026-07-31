@@ -177,7 +177,7 @@ The GitHub Actions pipeline performs:
 
 - Code linting
 - Automated testing
-- Coverage verification (80%)
+- Coverage verification (100%)
 - Docker build
 - Container smoke testing
 - Kubernetes deployment using Kind
