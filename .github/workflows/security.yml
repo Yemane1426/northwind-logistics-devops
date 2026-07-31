@@ -49,7 +49,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Trivy repository scan
-        uses: aquasecurity/trivy-action@v0.33.1
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: fs
           scan-ref: .
@@ -68,11 +68,14 @@ jobs:
 
       - name: Build container image
         run: |
-          docker build -t northwind-logistics:security-test .
+          docker build --no-cache \
+            -t northwind-logistics:security-test \
+            .
 
       - name: Scan container image
-        uses: aquasecurity/trivy-action@v0.33.1
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
+          scan-type: image
           image-ref: northwind-logistics:security-test
           format: table
           scanners: vuln
