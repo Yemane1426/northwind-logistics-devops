@@ -19,9 +19,16 @@ RUN useradd \
 COPY requirements.txt .
 
 RUN python -m pip install \
-    --no-cache-dir \
-    --disable-pip-version-check \
-    -r requirements.txt
+        --no-cache-dir \
+        --disable-pip-version-check \
+        --upgrade \
+        "pip==26.2" \
+        "setuptools==83.0.0" \
+        "wheel==0.47.0" && \
+    python -m pip install \
+        --no-cache-dir \
+        --disable-pip-version-check \
+        -r requirements.txt
 
 COPY --chown=appuser:appuser app ./app
 COPY --chown=appuser:appuser run.py ./run.py
