@@ -13,8 +13,7 @@ This project implements a Python-based REST API for tracking Northwind Logistics
 | GET / | Service information |
 | GET /health | Health check endpoint |
 | GET /deliveries | Returns all deliveries |
-| GET /deliveries/<id> | Returns a single delivery |
-
+| GET /deliveries/{id} | Returns a single delivery |
 ---
 
 ## 3. DevOps architecture
@@ -104,7 +103,7 @@ pytest
 Run coverage:
 
 ```powershell
-pytest --cov=app --cov-report=term-missing --cov-fail-under=80
+python -m pytest --cov=app --cov-branch --cov-report=term-missing --cov-fail-under=90
 ```
 
 ---
@@ -258,3 +257,28 @@ Potential future enhancements include:
 - Secrets management
 - Multi-node Kubernetes deployment
 - Continuous deployment to a cloud Kubernetes cluster
+
+## Security checks
+
+Run Python static security analysis:
+
+```bash
+python -m bandit -r app -ll
+```
+
+Audit locked development dependencies:
+
+```bash
+python -m pip_audit -r requirements-dev-lock.txt
+```
+
+The CI pipeline also scans repository files, infrastructure configuration and
+the container image for high and critical findings.
+
+## Kubernetes environments
+
+The `k8s/` manifests use a locally loaded Docker image for Minikube and Kind.
+
+The `k8s/production/` manifests demonstrate registry-based deployment using
+the image published to GitHub Container Registry. An immutable commit-SHA
+image should be used for an actual production release.

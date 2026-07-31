@@ -35,6 +35,7 @@ def running_server() -> Generator[tuple[str, int], None, None]:
 def make_request(
     server_address: tuple[str, int],
     path: str,
+    method: str = "GET",
 ) -> tuple[int, dict | list, str]:
     """Send a GET request and return status, JSON body, and content type."""
 
@@ -42,7 +43,7 @@ def make_request(
     connection = HTTPConnection(host, port, timeout=5)
 
     try:
-        connection.request("GET", path)
+        connection.request(method, path)
         response = connection.getresponse()
         raw_body = response.read().decode("utf-8")
         payload = json.loads(raw_body)
@@ -161,3 +162,68 @@ def test_trailing_slashes_and_query_strings_are_handled(
     status, _, _ = make_request(running_server, path)
 
     assert status == expected_status
+
+
+@pytest.mark.parametrize(
+    "method",
+    ["POST", "PUT", "PATCH", "DELETE"],
+)
+def test_unsupported_http_methods_do_not_modify_data(
+    running_server: tuple[str, int],
+    method: str,
+) -> None:
+    before = data.all_deliveries()
+
+    status, payload, content_type = make_request(
+        running_server,
+        "/deliveries",
+        method=method,
+    )
+
+    assert status == 405
+    assert content_type == "application/json"
+    assert payload == {"error": "Method not allowed"}
+    assert data.all_deliveries() == before
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/health",
+        "/deliveries",
+        "/deliveries/DOES-NOT-EXIST",
+        "/not-a-real-route",
+    ],
+)
+def test_json_responses_have_correct_content_type(
+    running_server: tuple[str, int],
+    path: str,
+) -> None:
+    _, _, content_type = make_request(running_server, path)
+
+    assert content_type == "application/json"
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/health?source=kubernetes",
+        "/deliveries?source=test",
+        "/deliveries/?page=1",
+    ],
+)
+def test_supported_routes_ignore_query_parameters(
+    running_server: tuple[str, int],
+    path: str,
+) -> None:
+    status, _, _ = make_request(running_server, path)
+
+    assert status == 200
+
+
+def test_delivery_list_returns_independent_data_structure() -> None:
+    first_result = data.all_deliveries()
+    second_result = data.all_deliveries()
+
+    assert first_result == second_result
+    assert first_result is not second_result
