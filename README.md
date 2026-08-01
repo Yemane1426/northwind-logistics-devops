@@ -1,9 +1,8 @@
 # Northwind Logistics Delivery Tracking Service
 ## Submission Information
 
-Submission commit:
+Submission evidence baseline commit: `59ebdd45b7b8b6f981cd17ca646ed667914b0f97`
 
-TO_BE_UPDATED
 ## 1. Project scope
 
 This project implements a Python-based REST API for tracking Northwind Logistics deliveries while demonstrating a complete DevOps workflow. The project includes automated testing, containerisation, Kubernetes deployment, Ansible environment automation, GitHub Actions CI/CD, and GitHub Container Registry (GHCR) image publication.
