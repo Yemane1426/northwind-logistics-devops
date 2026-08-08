@@ -183,7 +183,7 @@ The GitHub Actions pipeline performs:
 - Kubernetes rollout verification
 - Health endpoint verification
 - GHCR publication after merging to main
-
+ CI/CD pipeline verification completed.
 ---
 
 ## 12. Image publication
