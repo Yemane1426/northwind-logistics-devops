@@ -7,7 +7,7 @@ colorama==0.4.6
 coverage==7.15.0
 cyclonedx-python-lib==11.11.0
 defusedxml==0.7.1
-filelock==3.32.2
+filelock==4.2.1
 flake8==7.3.0
 idna==3.18
 iniconfig==2.3.0
